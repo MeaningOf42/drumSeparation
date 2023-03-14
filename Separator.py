@@ -72,37 +72,38 @@ def separate(filename, y=1, a_h=1, a_p=1, k_max=20):
     lb.output.write_wav("output/H.wav", x_h, sr, norm=False)
     lb.output.write_wav("output/P.wav", x_p, sr, norm=False)
 
-if len(sys.argv) == 1:
-    print("Please enter the audio filepath after the .py file")
-    exit(0)
-else:
-    filename = sys.argv[1]
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print("Please enter the audio filepath after the .py file")
+        exit(0)
+    else:
+        filename = sys.argv[1]
 
-    # Read music .wav file and plot its power spectrogram
-    audioOG, srOG = lb.load(filename, sr=None)
-    D = lb.amplitude_to_db(np.abs(lb.stft(audioOG)), ref=np.max)
-    plt.figure()
-    specshow(D, y_axis='linear')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Power spectrogram of ' + filename)
-    plt.show()
+        # Read music .wav file and plot its power spectrogram
+        audioOG, srOG = lb.load(filename, sr=None)
+        D = lb.amplitude_to_db(np.abs(lb.stft(audioOG)), ref=np.max)
+        plt.figure()
+        specshow(D, y_axis='linear')
+        plt.colorbar(format='%+2.0f dB')
+        plt.title('Power spectrogram of ' + filename)
+        plt.show()
 
-    # Separate into harmonics & percussion
-    separate(filename)
-    audioH, srH = lb.load('output/H.wav', sr=None)
-    audioP, srP = lb.load('output/P.wav', sr=None)
+        # Separate into harmonics & percussion
+        separate(filename)
+        audioH, srH = lb.load('output/H.wav', sr=None)
+        audioP, srP = lb.load('output/P.wav', sr=None)
 
-    # Get the separated (harmonics-only & percussions-only) power spectrograms
-    DH = lb.amplitude_to_db(np.abs(lb.stft(audioH)), ref=np.max)
-    DP = lb.amplitude_to_db(np.abs(lb.stft(audioP)), ref=np.max)
+        # Get the separated (harmonics-only & percussions-only) power spectrograms
+        DH = lb.amplitude_to_db(np.abs(lb.stft(audioH)), ref=np.max)
+        DP = lb.amplitude_to_db(np.abs(lb.stft(audioP)), ref=np.max)
 
-    # Plot the 2 separated spectrograms
-    plt.figure()
-    specshow(DH, y_axis='linear')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Power spectrogram of harmonics from ' + filename)
-    plt.show()
-    specshow(DP, y_axis='linear')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title('Power spectrogram of percussions from ' + filename)
-    plt.show()
+        # Plot the 2 separated spectrograms
+        plt.figure()
+        specshow(DH, y_axis='linear')
+        plt.colorbar(format='%+2.0f dB')
+        plt.title('Power spectrogram of harmonics from ' + filename)
+        plt.show()
+        specshow(DP, y_axis='linear')
+        plt.colorbar(format='%+2.0f dB')
+        plt.title('Power spectrogram of percussions from ' + filename)
+        plt.show()
